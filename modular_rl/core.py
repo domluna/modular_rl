@@ -436,6 +436,8 @@ class NnVf(object):
         vtarg_n1 = concat([path["return"] for path in paths]).reshape(-1,1)
         return self.reg.fit(ob_no, vtarg_n1)
     def preproc(self, ob_no):
+        if ob_no.shape > 2:
+            return ob_no
         return concat([ob_no, np.arange(len(ob_no)).reshape(-1,1) / float(self.timestep_limit)], axis=1)
 
 

@@ -107,6 +107,16 @@ GENERAL_OPTIONS = [
 # Load/save
 # ================================================================
 
+def load_h5_file(args):
+    print(args)
+    fname = args.load_snapshot
+    if not osp.exists(fname):
+        raise ValueError("args.load_snapshot {} does not exist".format(fname))
+    print("Loading previous snapshot at {}".format(fname))
+    import h5py
+    hdf = h5py.File(fname, "a")
+    return hdf
+
 
 def prepare_h5_file(args):
     outfile_default = "/tmp/a.h5"
@@ -120,16 +130,17 @@ def prepare_h5_file(args):
         try: hdf['params'][param] = val
         except (ValueError,TypeError):
             print("not storing parameter",param)
-    diagnostics = defaultdict(list)
-    print("Saving results to %s"%fname)
-    def save():
-        hdf.create_group("diagnostics")
-        for (diagname, val) in diagnostics.items():
-            hdf["diagnostics"][diagname] = val
-    hdf["cmd"] = " ".join(sys.argv)
-    atexit.register(save)
-
-    return hdf, diagnostics
+    return hdf
+    # diagnostics = defaultdict(list)
+    # print("Saving results to %s"%fname)
+    # def save():
+    #     hdf.create_group("diagnostics")
+    #     for (diagname, val) in diagnostics.items():
+    #         hdf["diagnostics"][diagname] = val
+    # hdf["cmd"] = " ".join(sys.argv)
+    # atexit.register(save)
+    #
+    # return hdf, diagnostics
 
 
 # ================================================================
