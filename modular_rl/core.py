@@ -150,16 +150,19 @@ def pathlength(path):
     return len(path["action"])
 
 def animate_rollout(env, agent, n_timesteps,delay=.01):
+    total_rew = 0
     ob = env.reset()
     env.render()
     for i in xrange(n_timesteps):
         a, _info = agent.act(ob)
         (ob, _rew, done, _info) = env.step(a)
+        total_rew += _rew
         env.render()
         if done:
             print("terminated after %s timesteps"%i)
             break
         time.sleep(delay)
+    print("Total episode reward = {}".format(total_rew))
 
 # ================================================================
 # Stochastic policies 
